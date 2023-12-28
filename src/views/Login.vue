@@ -2,6 +2,9 @@
 <template>
     <div style="margin-top: 10px;">
         <div class="login-class">
+            <div v-if="isError">
+                <span>Invalid userid or password</span>
+            </div>
             <div>
                 <label for="userid">Username: </label>
                 <input type="text" autocomplete="off" id="userid" v-model="inputs.username"/>
@@ -17,15 +20,29 @@
     </div>
 </template>
 <script lang="ts" setup>
-    import { reactive } from 'vue';
+    import { reactive, ref } from 'vue';
     import { useLogin } from '../composables/useLogin';
 import '../styles/login.scss';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { RootState } from '../store/types';
 const { validateLogin } = useLogin();
+const router = useRouter();
+const store = useStore<RootState>();
+let isError = ref(false);
     const inputs = reactive({
         username: null,
         password: null
     });
     async function onSubmit() {
-        validateLogin(inputs);
+        isError.value = false;
+        const response = await validateLogin(inputs);
+        if (!response) {
+            isError.value = true;
+            return;
+        }
+        store.commit('setAuthState', { isLoggedIn: true, token: 'abc', msg: 'OK' })
+        router.push('/')
+        return;
     }
 </script>

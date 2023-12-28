@@ -1,5 +1,5 @@
 import Vuex, { StoreOptions } from 'vuex';
-import { AuthStateInit, RootState } from './types';
+import { AuthState, AuthStateInit, RootState } from './types';
 
 const store: StoreOptions<RootState> = {
     state: {
@@ -8,6 +8,12 @@ const store: StoreOptions<RootState> = {
     getters: {
         getLoggedInState(state) {
             return state.authState.isLoggedIn;
+        }
+    },
+    mutations: {
+        setAuthState(state, payload: AuthState) {
+            console.log('setAuthState...')
+            state.authState = payload;
         }
     }
 }

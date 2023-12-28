@@ -7,9 +7,11 @@ export function useLogin() {
     }
 
     async function validateLogin(inputs: any) {
-        console.log('Validate login');
-        console.log(inputs);
-        return inputs;
+        // Call API.
+        if (inputs.username === inputs.password) {
+            return true;
+        }
+        return false;
     }
     onMounted(() => {
         console.log('Mounting useLogin composable.')
